@@ -9,22 +9,22 @@ const getPriceHtml = () => document.querySelector('.total-price');
 
 const getCartList = () => document.querySelectorAll('.cart__items');
 
-const storeItems = () => {
-  const items = getCartList();
-  items.forEach((item) => localStorage.setItem('myCart', item.innerHTML));
-  const cartPrice = getPriceHtml().innerHTML;
-  localStorage.setItem('cartPrice', cartPrice);
-};
+// const storeItems = () => {
+//   const items = getCartList();
+//   items.forEach((item) => localStorage.setItem('myCart', item.innerHTML));
+//   const cartPrice = getPriceHtml().innerHTML;
+//   localStorage.setItem('cartPrice', cartPrice);
+// };
 
-const loadItems = () => {
-  const itemsStorage = getCartList();
-  itemsStorage.forEach((item) => {
-    const loadItem = item;
-    loadItem.innerHTML = localStorage.getItem('myCart');
-  });
-  const price = getPriceHtml();
-  price.innerHTML = localStorage.getItem('cartPrice');
-};
+// const loadItems = () => {
+//   const itemsStorage = getCartList();
+//   itemsStorage.forEach((item) => {
+//     const loadItem = item;
+//     loadItem.innerHTML = localStorage.getItem('myCart');
+//   });
+//   const price = getPriceHtml();
+//   price.innerHTML = localStorage.getItem('cartPrice');
+// };
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
@@ -117,10 +117,11 @@ const appendItems = async (product) => {
   const data = await fetchProduct(product);
   const items = await document.querySelector('.items');
   data.results.forEach((element) => {
-    const result = createProductItemElement(element);
+    const img = `https://http2.mlstatic.com/D_NQ_NP_${element.thumbnail_id}-O.webp`
+    const result = createProductItemElement({id: element.id, title: element.title, thumbnail: img});
     items.appendChild(result);
   });
-  loadItems();
+  // loadItems();
 };
 
 const fetchId = (itemId) => (
@@ -139,25 +140,43 @@ const appendToCart = async (data) => {
   calculateCartPrice(data);
   const cartList = getCartItems();
   cartList.appendChild(cart);
-  storeItems();
+  const hr = document.createElement('HR');
+  hr.className = 'line'
+  cart.appendChild(hr);
+  // storeItems();
 };
 
-const addToCart = async (product, target) => {
+const addToCart = async (target) => {
   const id = target.previousSibling.previousSibling.previousSibling.innerText;
   const idData = await fetchId(id);
   appendToCart(idData);  
 };
 
-const addToCartEvent = (product) => {
+const addToCartEvent = () => {
   const itemsContainer = document.querySelector('.items');
   itemsContainer.addEventListener('click', (event) => (
-    event.target.classList.contains('item__add') ? addToCart(product, event.target) : undefined
+    event.target.classList.contains('item__add') ? addToCart(event.target) : undefined
   ));
 };
 
+const searchProduct = () => {
+  const btn = document.querySelector('.btn-search');
+  const search = document.querySelector('.search');
+  btn.addEventListener('click', () => {
+    emptyProducts();
+    let product = search.value;
+    appendItems(product);    
+  });
+};
+
+const emptyProducts = () => {
+  container = document.querySelector('.items');
+  items = document.querySelectorAll('.item');
+  items.forEach((item) => container.removeChild(item));
+};
+
 window.onload = function onload() {
-  const product = 'computador';
-  appendItems(product);
-  addToCartEvent(product);
+  searchProduct();
+  addToCartEvent();
   emptyCart();
  };
