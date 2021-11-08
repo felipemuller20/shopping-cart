@@ -8,7 +8,7 @@ Este projeto consiste em um carrinho de compras dinâmico. Ele foi realizado uti
 
 # 👀 Visualização
 
-O deploy deste projeto foi realizado via GitHub Pages e você pode acessá-lo através [deste link](https://felipemuller20.github.io/shopping-cart-project/).
+O deploy deste projeto foi realizado via GitHub Pages e você pode acessá-lo através [deste link](https://felipemuller20.github.io/shopping-cart/).
 
 ---
 
